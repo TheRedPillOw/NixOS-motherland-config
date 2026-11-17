@@ -16,8 +16,8 @@
 								type = "filesystem";
 								format = "vfat";
 								mountpoint = "/boot";
-							}
-						}
+							};
+						};
 						luks = {
 							size = "100%";
 							label = "LUKS";
@@ -26,22 +26,43 @@
 								name = "cryptroot";
 								content = {
 									type = "btrfs";
+									extraArgs = ["-L" "nixos-motherland" "-f"];
 									subvolumes = {
 										"/root" = {
 											mountpoint = "/";
-											mountOptions = ["subvol=root" "compress=zstd"];
-										}
+											mountOptions = ["subvol=root" "compress=zstd" "noatime"];
+										};
 										"/home" = {
 											mountpoint = "/home";
-											mountOptions = ["subvol=home" "compress=zstd"];
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
+											mountOptions = ["subvol=home" "compress=zstd" "noatime"];
+										};
+										"/nix" = {
+											mountpoint = "/nix";
+											mountOptions = ["subvol=nix" "compress=zstd" "noatime"];
+										};
+										"/persist" = {
+											mountpoint = "/persist";
+											mountOptions = ["subvol=persist" "compress=zstd" "noatime"];
+										};
+										"/log" = {
+											mountpoint = "/var/log";
+											mountOptions = ["subvol=log" "compress=zstd" "noatime"];
+										};
+										"/swap" = {
+											mountpoint = "/swap";
+											swap.swapfile.size = "9G"
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+
+	
+	fileSystems."/persist".neededForBoot = true;
+	fileSystems."/persist".neededForBoot = true;
+};
