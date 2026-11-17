@@ -18,6 +18,27 @@
 								mountpoint = "/boot";
 							}
 						}
+						luks = {
+							size = "100%";
+							label = "LUKS";
+							content = {
+								type = "luks";
+								name = "cryptroot";
+								content = {
+									type = "btrfs";
+									subvolumes = {
+										"/root" = {
+											mountpoint = "/";
+											mountOptions = ["subvol=root" "compress=zstd"];
+										}
+										"/home" = {
+											mountpoint = "/home";
+											mountOptions = ["subvol=home" "compress=zstd"];
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
